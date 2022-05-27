@@ -2,6 +2,12 @@ import twint
 import sys, os
 import numpy as np
 
+
+from nltk.corpus import stopwords
+import nltk
+nltk.download('stopwords')
+
+
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
@@ -126,21 +132,29 @@ def interest(name):
     
 
     #common words in french that are not interesting
-    MotCour = ("le","les","Les","de","un","être","et","à","il","avoir","ne","je","son","que","se","qui","ce","dans","en","du",
+    MotCour = ["le","les","Les","de","un","être","et","à","il","avoir","ne","je","son","que","se","qui","ce","dans","en","du",
     "elle","au","de","ce","ces","le","la","c'est","n'est","a","des","est",'été', 'Avec', 'peu', 'La',
     "j'ai", 'très',"merci","afin", "quoi", "même", "cet","⬇️", "C'est","oui","non","ses","tweet","cet","trop","ont","sous","d'en","aussi", 'Il', 'Ce',"pour", '💚', 'vit.', 'Ça', 'aux', 'oui,' ,'cette', 'Pour', 'peut',
     ':', '🙂', 'fait', "ni", "vit", "sera", "ai", "mis", "cf"," depuis", "sa", "amp", "soit", "–", "surtout", "milliers", "milliards", "cause", "👇", "➡️","soit", "sous", "qu'il", "faut", ":)", "=)", 'Je', "1","2","3","4","5","6","7","8","9","10", 'ça', 'donner','😊', "ma","donc",'une', '🙏',
     'sont', 'Merci',"pas","que","vous","par","sur","faire","plus","dire","me","on","mon","lui","nous","comme","mais","pouvoir","avec","tout","y",
     "aller","avez","ds", "😏", "💚🙏", "dois", "bon", "vis", "bonjour", "encore", "rien","delà",  "faudrait","semble","leurs","serai","effectivement","voir","👆👆👆","haha","là","autre","autres","fois","petit","nouvelle","nouveau","avez","voilà","ah","ruy","RT","ferais","j","te","tous","mes","beaucoup",
     "alors","svp","dit","contre","ya","quand","cas","évidemment","personnes","en","qu","va","avait","fais","votre","suis","passe","entre","n°","ℹ️","jour","📚","chaque","forme","mises","vos","jour","propos","tanté",
-    "après","bonne","mauvaise","notre","nos","ils","quelques","tellement","journée","fe","tienes","moment","el","ton","🙏🏻🤍","jours","som","foc","c","ici","chez","depuis","avant","année","es","bien","où","sans","✅","❌","🌱",")","(","n","C", "celui", "déjà", "vers", "indiqué", "Retrouvez", "nombreuses", "Concernant","majoritairement","tu","ou","%","chez","prise","etc","leur","homme","si","deux","l","mari","moi","?","!",".",",","d","t","","moins","plus")
+    "après","bonne","mauvaise","notre","nos","ils","quelques","tellement","journée","fe","tienes","moment","el","ton","🙏🏻🤍","jours","som","foc","c","ici","chez","depuis","avant","année","es","bien","où","sans","✅","❌","🌱",")","(","n","C", "celui", "déjà", "vers", "indiqué", "Retrouvez", "nombreuses", "Concernant","majoritairement","tu","ou","%","chez","prise","etc","leur","homme","si","deux","l","mari","moi","?","!",".",",","d","t","","moins","plus"]
 
     #common words in english that are not interesting
-    MotCourEn = ("to","when", "the", "the", "of","much", "a", "be", "and", "am", "at", "he", "have", "do", "I", " his "," that "," is "," who "," this "," in "," in "," of ",
+    MotCourEn = ["to","when", "the", "the", "of","much", "a", "be", "and", "am", "at", "he", "have", "do", "I", " his "," that "," is "," who "," this "," in "," in "," of ",
     "she", "at", "of","as","m","co","are","from","which","why","about","don","oh","each", "this", "these", "the", "the", "it", "is","s", "a", "of", "is ", 'With', 'little', 'La',
     "i", 'very', "thank","you","thanks","for","your","there","their","It's", "so", "what", "been","even", "this", "it's", "yes", "no", "his", "tweet "," this "," too "," have "," under "," from "," also ", 'He', 'This'," for ",' 💚 ','live',' That ',' to ',' yes, ',' this', 'For', 'may',
     ':', '🙂', 'done', "under", "that", "must", 'I', "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", 'that', 'give', '😊', "my", "therefore", 'a', '🙏', 'are ',' Thank you ', "not", "that", "you", "by", "on", "do", "more", "say", "me", "on", "my", "him", "we", "like", "but", "can", "with", "all", "y",
-    "go", "see", "in","really", '"',"just","because","re","make","high","long","now","ve","let","owe","choose","they","then", "them", "good", "where", "without", "you", "or", "their", "man", "if", "two", "husband ","me","?","!",".",",")
+    "go", "see", "in","really", '"',"just","because","re","make","high","long","now","ve","let","owe","choose","they","then", "them", "good", "where", "without", "you", "or", "their", "man", "if", "two", "husband ","me","?","!",".",","]
+
+    french_stop_words = stopwords.words("french")
+    english_stop_words = stopwords.words("english")
+
+    #add french stop words to mot cour
+    MotCour.append(list(french_stop_words))
+    MotCourEn.append(list(english_stop_words))
+
 
     #filter out the words that are in the common words list (both french and english)
     sorted_wordcount = dict(filter(lambda key: not(key[0].lower() in MotCour or key[0].lower() in MotCourEn) and not(key[0].startswith("http")) and not(key[0].startswith("@")),sorted_wordcount))
